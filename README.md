@@ -8,7 +8,7 @@
 ![React](https://img.shields.io/badge/React-19%20%2B%20Vite-61dafb?style=flat-square)
 ![Docker](https://img.shields.io/badge/Docker-Compose-2496ed?style=flat-square)
 
-# AI Knowledge Base  ![Last Commit](https://img.shields.io/github/last-commit/AndrzejSzelag/ai-knowledge-base) ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
+# AI Knowledge Base ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
 **AI Knowledge Base** is a modern **RAG** (Retrieval-Augmented Generation) platform that allows you to create a private knowledge base powered by your own documents. The application combines the capabilities of **Spring AI** with local LLM (Large Language Models) **Ollama**, eliminating the need to send data to external providers-no OpenAI API key required!
 
