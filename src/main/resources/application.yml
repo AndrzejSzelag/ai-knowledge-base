@@ -1,0 +1,131 @@
+# ========================================================
+# Spring AI Knowledge Base — Main Application Configuration
+# ========================================================
+
+# Disable response buffering to ensure smooth SSE streaming to the UI
+server:
+  compression:
+    enabled: false
+
+spring:
+  application:
+    name: ai-knowledge-base
+
+  # -------------------------
+  # Security — OAuth2 (Google)
+  # -------------------------
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: ${GOOGLE_CLIENT_ID}
+            client-secret: ${GOOGLE_CLIENT_SECRET}
+            scope: [ openid, profile, email ]
+            redirect-uri: "{baseUrl}/login/oauth2/code/{registrationId}"
+
+  # -------------------------
+  # DataSource — PostgreSQL + HikariCP
+  # -------------------------
+  datasource:
+    # Port 5433 matches the docker-compose.yml host mapping
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://localhost:5433/ai-db}
+    username: ${SPRING_DATASOURCE_USERNAME:user}
+    password: ${SPRING_DATASOURCE_PASSWORD:pass}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      pool-name: AiKnowledgeBase-HikariCP
+      # Pre-initialize connections to eliminate cold-start latency on first request
+      minimum-idle: 5
+      maximum-pool-size: 10
+      idle-timeout: 300000         # 5 min — time before idle connections are released
+      connection-timeout: 20000    # 20 s  — max wait for a connection from the pool
+      max-lifetime: 1200000        # 20 min — max connection age before forced renewal
+      # Fail fast on startup if the DB is unreachable (value: ms, -1 = skip check)
+      initialization-fail-timeout: 1
+
+  # -------------------------
+  # JPA / Hibernate
+  # -------------------------
+  jpa:
+    open-in-view: false
+    show-sql: true
+    hibernate:
+      # 'validate' protects manually created HNSW indexes (init-vector.sql) from being dropped
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:validate}
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        # Prevent Hibernate from auto-managing pgvector column types
+        temp:
+          use_jdbc_metadata_defaults: false
+
+  # -------------------------
+  # AI — Ollama
+  # -------------------------
+  ai:
+    ollama:
+      base-url: ${SPRING_AI_OLLAMA_BASE_URL:http://localhost:11434}
+
+      # Embedding model: mxbai-embed-large — 1024-dimensional vectors
+      embedding:
+        enabled: true
+        model: mxbai-embed-large
+        options:
+          num-ctx: 512      # Matches the model's native max input token limit
+
+      # Chat LLM: llama3.2:3b
+      chat:
+        enabled: true
+        model: llama3.2:3b
+        options:
+          temperature: 0.2  # Low temperature for factual, deterministic answers
+          num-ctx: 1536     # Context window size (tokens); increase to 4096 for richer context
+          num-thread: 4     # Should match available physical CPU cores
+          num-predict: 512  # Max tokens the model can generate per response
+          keep-alive: 15m   # Keep model loaded in VRAM between requests
+          streaming: true
+
+    # -------------------------
+    # VectorStore — PGVector
+    # -------------------------
+    vectorstore:
+      pgvector:
+        # Schema is managed manually via init-vector.sql for precise HNSW index tuning
+        initialize-schema: false
+        index-type: HNSW
+        distance-type: COSINE_DISTANCE
+        dimensions: 1024
+        # Must match the index created in init-vector.sql
+        hnsw-params:
+          M: 16               # Max connections per node — higher = better recall, more RAM
+          ef_construction: 128 # Index build quality — higher = slower build, better accuracy
+          ef_search: 50        # Query-time recall depth — higher = better recall, slower search
+
+# -------------------------
+# Application Custom Properties
+# -------------------------
+app:
+  display:
+    name: AI Knowledge Base
+  frontend-url: ${APP_FRONTEND_URL:http://localhost:8080}
+
+  # RAG — Text/Document Chunking (semantic splitter)
+  splitter:
+    short-text-threshold: 250   # Texts below this length are not split
+    chunk-size: 450             # Target chunk size in characters
+    overlap-ratio: 0.2          # Overlap between chunks (~90 chars at chunk-size 450)
+    min-chunk-size: 100         # Discard chunks smaller than this
+    max-chunk-size: 512         # Hard cap per chunk
+
+  # RAG — Retrieval & Generation
+  rag:
+    top-k: 3                    # Number of candidate documents retrieved from pgvector
+    similarity-threshold: 0.6    # Min cosine similarity to pass the relevance filter
+    final-context-docs: 2        # Documents actually injected into the LLM prompt
+    max-context-chars: 3000      # Max total characters of context sent to the LLM
+    system-prompt-template: "Use the following context to answer the question: {context}"
+    include-sources: true
+    fallback-message: "I could not find any relevant information in the knowledge base."
+    timeout: 60s

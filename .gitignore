@@ -1,0 +1,63 @@
+# === Security & Environment ===
+.env
+.env.*
+!.env.example
+keystore.p12
+*.p12
+
+# === Maven / Build ===
+target/
+**/target/
+**/build/
+target/*.jar
+target/*.war
+*.zip
+*.tar.gz
+
+# === Docker ===
+docker-compose.override.yml
+
+# === IntelliJ IDEA ===
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# === VS Code ===
+.vscode/
+
+# === Logs & Temps ===
+*.log
+logs/
+debug.log
+temp/
+*.tmp
+*.bak
+
+# === Test / Coverage / Quality ===
+surefire-reports/
+failsafe-reports/
+jacoco.exec
+coverage/
+*.hprof
+.scannerwork/
+
+# === System Files ===
+.DS_Store
+desktop.ini
+thumbs.db
+
+# === Editor temp files ===
+*.swp
+*.swo
+*~
+
+# === Virtual Environments & Caches ===
+venv/
+
+# === Python Bytecode ===
+__pycache__/
+
+# === Node.js ===
+node_modules/

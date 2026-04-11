@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Prints logs to console with method and line number for easier debugging -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{36}).%method:%line - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Suppress noisy framework logs during tests -->
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.hibernate"       level="WARN"/>
+    <logger name="com.zaxxer.hikari"   level="WARN"/>
+
+    <!-- Keep application logs visible at INFO -->
+    <logger name="pl.szelag.ai_knowledge_base" level="INFO"/>
+
+    <!-- Default level for everything else -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

@@ -1,0 +1,81 @@
+# ========================================================
+# Spring AI Knowledge Base - TEST LOCAL PROFILE
+# ========================================================
+# REQUIRES: PostgreSQL (pgvector) running via docker-compose.
+# The 'ai-db-test' database is created automatically 
+# by docker-compose.
+# ========================================================
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5555/ai-db-test?sslmode=disable
+    username: user
+    password: pass
+    driver-class-name: org.postgresql.Driver
+
+  sql:
+    init:
+      mode: always
+      schema-locations: classpath:init-vector.sql
+      continue-on-error: true
+
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    defer-datasource-initialization: false
+    hibernate:
+      ddl-auto: validate
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  # Dummy OAuth2 values — prevents missing secret errors during integration tests
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: test-client-id
+            client-secret: test-client-secret
+
+ai:
+  ollama:
+    base-url: http://localhost:11434
+    embedding:
+      enabled: true
+      model: mxbai-embed-large
+      options:
+        num-ctx: 512
+    chat:
+      enabled: true
+      model: llama3.2:1b
+      options:
+        temperature: 0.0
+        num-ctx: 2048
+        num-predict: 100
+
+  vectorstore:
+    pgvector:
+      initialize-schema: false
+      index-type: HNSW
+      distance-type: COSINE_DISTANCE
+      dimensions: 1024
+
+app:
+  display:
+    name: AI Knowledge Base
+  frontend-url: http://localhost:3000
+  splitter:
+    short-text-threshold: 200
+    chunk-size: 320
+    overlap-ratio: 0.2
+    min-chunk-size: 120
+    max-chunk-size: 420
+  rag:
+    top-k: 3
+    similarity-threshold: 0.70
+    final-context-docs: 3
+    max-context-chars: 3000
+    system-prompt-template: "Use the following context to answer the question: {context}"
+    fallback-message: "I could not find any relevant information in the knowledge base."
+    include-sources: true
+    timeout: 30s

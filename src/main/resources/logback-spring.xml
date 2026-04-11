@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <!-- Console appender — no method/line to avoid stacktrace inspection overhead -->
+    <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %highlight(%-5level) %cyan(%logger{36}) - %msg%n</pattern>
+        </encoder>
+    </appender>
+
+    <!-- Suppress verbose framework logs in production -->
+    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.hibernate"       level="WARN"/>
+    <logger name="com.zaxxer.hikari"   level="WARN"/>
+
+    <!-- Application logs -->
+    <logger name="pl.szelag.ai_knowledge_base" level="INFO"/>
+
+    <!-- Default level for everything else -->
+    <root level="INFO">
+        <appender-ref ref="STDOUT"/>
+    </root>
+</configuration>

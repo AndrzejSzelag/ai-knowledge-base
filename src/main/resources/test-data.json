@@ -1,0 +1,122 @@
+[
+  {
+    "content": "Spring AI is a comprehensive Java framework that streamlines the development of AI-powered applications within the Spring ecosystem, drawing inspiration from Python projects like LangChain and LlamaIndex. It provides a portable, provider-agnostic API for Chat, Embedding, Text-to-Image, Audio Transcription, Text-to-Speech, and Moderation models — supporting all major providers including Anthropic, OpenAI, Microsoft, Amazon, Google, and Ollama. Spring AI includes a full Document Ingestion ETL pipeline for data engineering, a ChatClient fluent API idiomatically similar to WebClient, an Advisors API for encapsulating recurring Generative AI patterns, and built-in support for Chat Conversation Memory and Retrieval Augmented Generation (RAG). It supports all major Vector Store providers — including PostgreSQL/PGVector, Redis, MongoDB Atlas, Pinecone, Elasticsearch, Neo4j, Chroma, Weaviate, and more — through a unified portable API with a novel SQL-like metadata filter API. Additional features include Structured Outputs mapping AI responses to POJOs, Tools/Function Calling for real-time data access, AI Model Evaluation utilities to detect hallucinations, Observability via Micrometer, and Spring Boot Auto Configuration and Starters for rapid setup.",
+    "metadata": {
+      "category": "AI/ML",
+      "subcategory": "Frameworks",
+      "source": "Spring AI Official Documentation — spring.io/projects/spring-ai",
+      "difficulty": "intermediate",
+      "tags": ["spring-ai", "java", "llm", "vectorstore", "rag", "etl", "embeddings"],
+      "language": "en",
+      "ingested_at": 1710921700000
+    }
+  },
+  {
+    "content": "AI Models are algorithms designed to process and generate information, often mimicking human cognitive functions by learning patterns from large datasets. Spring AI supports models that process language, image, and audio — covering Chat Completion, Embedding, Text-to-Image, Audio Transcription, Text-to-Speech, and Moderation. What sets models like GPT apart is their pre-trained nature — the 'P' in GPT stands for Pre-trained — which transforms AI into a general developer tool that does not require an extensive machine learning background. Spring AI provides a portable, provider-agnostic API that works across all major model providers including OpenAI, Anthropic, Google, Amazon, Microsoft, and Ollama, enabling easy component swapping with minimal code changes.",
+    "metadata": {
+      "category": "AI/ML",
+      "subcategory": "Models",
+      "source": "Spring AI Official Documentation — docs.spring.io/spring-ai/reference/concepts.html",
+      "difficulty": "beginner",
+      "tags": ["ai-models", "llm", "embeddings", "spring-ai", "pre-trained"],
+      "language": "en",
+      "ingested_at": 1710921710000
+    }
+  },
+  {
+    "content": "Prompts are the language-based inputs that guide an AI model to produce specific outputs. Unlike SQL queries, prompts communicate with AI models similarly to conversing with a person — making prompt crafting both an art and a science. In chat-based models like GPT, a prompt consists of multiple messages each assigned a role: the system role sets model behavior and context, while the user role carries the actual user input. Spring AI uses the OSS library StringTemplate for prompt templating, allowing dynamic value substitution — for example: 'Tell me a {adjective} joke about {content}'. Prompt templates in Spring AI are analogous to the View layer in Spring MVC: a java.util.Map populates placeholders and the rendered string becomes the prompt sent to the model. The discipline of crafting effective prompts is called Prompt Engineering — investing time in prompt design can drastically improve AI output quality.",
+    "metadata": {
+      "category": "AI/ML",
+      "subcategory": "Prompts",
+      "source": "Spring AI Official Documentation — docs.spring.io/spring-ai/reference/concepts.html",
+      "difficulty": "beginner",
+      "tags": ["prompts", "prompt-engineering", "spring-ai", "llm", "templates"],
+      "language": "en",
+      "ingested_at": 1710921720000
+    }
+  },
+  {
+    "content": "A vector database is a specialized type of database that plays an essential role in AI applications. Unlike traditional relational databases that perform exact matches, vector databases perform similarity searches — given a query vector, they return vectors that are mathematically closest to it. Vector databases are the core storage layer in RAG (Retrieval Augmented Generation) pipelines: documents are first loaded into the vector database as embedding vectors, and at query time the most semantically similar document chunks are retrieved and injected into the AI model prompt as context. Spring AI provides a unified VectorStore interface that works across all major vector database providers including PostgreSQL/PGVector, Redis, MongoDB Atlas, Pinecone, Elasticsearch, Chroma, Weaviate, Neo4j, Milvus, Azure Vector Search, and more — with a portable SQL-like metadata filter API that works identically across providers, enabling vendor-neutral development.",
+    "metadata": {
+      "category": "AI/ML",
+      "subcategory": "Vector Databases",
+      "source": "Spring AI Official Documentation — docs.spring.io/spring-ai/reference/api/vectordbs.html",
+      "difficulty": "intermediate",
+      "tags": ["vector-database", "similarity-search", "rag", "spring-ai", "embeddings"],
+      "language": "en",
+      "ingested_at": 1710921760000
+    }
+  },
+  {
+    "content": "PGVector is an open-source extension for PostgreSQL that enables storing and searching over machine learning-generated embeddings directly within a PostgreSQL database. It provides capabilities for both exact and approximate nearest neighbor search, and is designed to work seamlessly with all standard PostgreSQL features including indexing, querying, and transactions. PGVector supports two primary index types: IVFFlat for partitioned approximate search and HNSW (Hierarchical Navigable Small World) for faster and more accurate approximate nearest neighbor queries — HNSW is generally preferred for production workloads. Three distance functions are supported: L2 (Euclidean distance), inner product, and cosine similarity — cosine is the standard choice for normalized LLM embeddings. In Spring AI, PGVector is integrated via the PgVectorStore implementation of the VectorStore interface, configured through spring-ai-pgvector-store-spring-boot-starter. Key configuration properties include the vector dimension (must match the embedding model output, e.g. 1024 for mxbai-embed-large), index type, distance type, and similarity threshold. This allows developers to store both structured relational data and high-dimensional embedding vectors in a single PostgreSQL instance, eliminating the need for a separate vector database infrastructure.",
+    "metadata": {
+      "category": "AI/ML",
+      "subcategory": "Vector Databases",
+      "source": "Spring AI Official Documentation — docs.spring.io/spring-ai/reference/api/vectordbs/pgvector.html",
+      "difficulty": "intermediate",
+      "tags": ["pgvector", "postgresql", "embeddings", "hnsw", "spring-ai", "ann"],
+      "language": "en",
+      "ingested_at": 1710921770000
+    }
+  },
+  {
+    "content": "Embeddings are numerical representations of text, images, or videos that capture semantic relationships between inputs. They work by converting content into arrays of floating point numbers called vectors, where the length of the array is called the vector's dimensionality. The key insight is that semantically similar content produces vectors that are mathematically close to each other in high-dimensional space — just as nearby points on a 2D plane are physically close. This enables applications to determine content similarity by calculating the numerical distance between vectors. Embeddings are foundational to the RAG (Retrieval Augmented Generation) pattern: user queries are converted to embedding vectors and compared against stored document embeddings to find the most semantically relevant chunks. Spring AI provides an EmbeddingModel abstraction supporting providers like Ollama (mxbai-embed-large, nomic-embed-text) and OpenAI (text-embedding-3-small), enabling tasks such as semantic search, text classification, and content recommendations.",
+    "metadata": {
+      "category": "AI/ML",
+      "subcategory": "Embeddings",
+      "source": "Spring AI Official Documentation — docs.spring.io/spring-ai/reference/concepts.html",
+      "difficulty": "intermediate",
+      "tags": ["embeddings", "vectors", "semantic-search", "rag", "spring-ai"],
+      "language": "en",
+      "ingested_at": 1710921730000
+    }
+  },
+  {
+    "content": "Tokens are the fundamental building blocks of how AI models process text. On input, models convert words into tokens; on output, they convert tokens back into words. In English, one token roughly corresponds to 75% of a word — Shakespeare's complete works of approximately 900,000 words translate to around 1.2 million tokens. Tokens directly determine cost: in hosted AI models, charges are based on the total number of input and output tokens consumed. Models are also subject to token limits called the context window — the maximum amount of text processable in a single API call. GPT-3 supports 4K tokens, GPT-4 variants offer 8K to 32K, Anthropic Claude supports 100K, and some research models reach 1M tokens. When processing documents that exceed the context window, the text must be chunked into smaller pieces — a task that Spring AI's TokenTextSplitter handles automatically as part of the ETL ingestion pipeline.",
+    "metadata": {
+      "category": "AI/ML",
+      "subcategory": "Concepts",
+      "source": "Spring AI Official Documentation — docs.spring.io/spring-ai/reference/concepts.html",
+      "difficulty": "beginner",
+      "tags": ["tokens", "context-window", "llm", "spring-ai", "cost"],
+      "language": "en",
+      "ingested_at": 1710921740000
+    }
+  },
+  {
+    "content": "Retrieval Augmented Generation (RAG) is a technique that addresses the challenge of incorporating relevant private or domain-specific data into AI model prompts for accurate responses. The RAG pipeline follows an ETL (Extract, Transform, Load) model: unstructured documents are extracted, transformed by splitting into semantically coherent chunks, converted into embedding vectors, and loaded into a vector database like PGVector. Critically, documents must be split at semantic boundaries — never mid-paragraph, mid-table, or mid-method — and chunk sizes must remain within a small percentage of the model's token limit. At query time, the user's question is converted to an embedding vector and used to retrieve the top-K most similar document chunks from the vector store. These chunks are injected into the prompt as context, grounding the LLM's response in retrieved facts rather than pre-trained knowledge alone — significantly reducing hallucinations. In Spring AI, RAG is implemented via the QuestionAnswerAdvisor in the ChatClient API, combined with a VectorStore and EmbeddingModel.",
+    "metadata": {
+      "category": "AI/ML",
+      "subcategory": "Architecture",
+      "source": "Spring AI Official Documentation — docs.spring.io/spring-ai/reference/concepts.html",
+      "difficulty": "intermediate",
+      "tags": ["rag", "etl", "embeddings", "pgvector", "spring-ai", "hallucinations"],
+      "language": "en",
+      "ingested_at": 1710921750000
+    }
+  },
+  {
+    "content": "Large Language Models (LLMs) are a category of deep learning models trained on immense amounts of data, capable of understanding and generating natural language and other types of content across a wide range of tasks. LLMs are built on the Transformer neural network architecture, which excels at handling sequences of words and capturing patterns in text. They function as giant statistical prediction machines that repeatedly predict the next word in a sequence, learning patterns from training data to generate coherent, contextually appropriate language. LLMs represent a major leap in human-computer interaction because they are the first AI systems capable of handling unstructured human language at scale — capturing deeper context, nuance, and reasoning far beyond traditional keyword-matching search engines. Once trained, LLMs can adapt to many applications: summarizing articles, debugging code, drafting legal clauses, answering questions, and — when given agentic capabilities — autonomously performing tasks that would otherwise require human effort. LLMs are the culmination of decades of progress in Natural Language Processing (NLP) and machine learning research. Popular publicly accessible LLMs include Anthropic's Claude, OpenAI's ChatGPT, Microsoft's Copilot, Meta's Llama, Google's Gemini, BERT, and PaLM, as well as IBM's Granite model series. In the context of Spring AI and RAG applications, LLMs serve as the reasoning engine: they receive a structured prompt containing retrieved context and the user question, and generate a response grounded in the provided information.",
+    "metadata": {
+      "category": "AI/ML",
+      "subcategory": "Models",
+      "source": "IBM Think Blog — ibm.com/think/topics/large-language-models",
+      "difficulty": "beginner",
+      "tags": ["llm", "transformer", "nlp", "generative-ai", "deep-learning", "spring-ai"],
+      "language": "en",
+      "ingested_at": 1710921780000
+    }
+  },
+  {
+    "content": "Ollama is the easiest way to get up and running with large language models locally, supporting models such as GPT-OSS, Gemma 3, DeepSeek-R1, Qwen3, Llama 3, Mistral, Phi-3, and embedding models like mxbai-embed-large and nomic-embed-text. Ollama enables developers to download, manage, and run LLMs on their own hardware without requiring cloud infrastructure, GPU clusters, or complex setup. It exposes a simple REST API compatible with the OpenAI API specification, making it a drop-in replacement for cloud LLM providers in local development environments. Models are managed via the Ollama CLI using commands like 'ollama pull llama3.2:1b' and 'ollama run gemma3'. Key configuration parameters include num_ctx (context window size in tokens), num_thread (CPU threads for inference), temperature (controls response randomness), and keep_alive (how long to keep the model loaded in memory). When running Ollama on a host machine and accessing it from a Docker container, the base URL must be set to http://host.docker.internal:11434 to route traffic through the Docker host bridge. In Spring AI, Ollama is integrated via the spring-ai-ollama-spring-boot-starter, configurable through application.yml with properties for base URL, model name, and inference parameters. Ollama is particularly valuable for privacy-sensitive applications where data cannot leave local infrastructure, and for cost-free local development and experimentation. Ollama is available on macOS, Windows, and Linux.",
+    "metadata": {
+      "category": "AI/ML",
+      "subcategory": "Infrastructure",
+      "source": "Ollama Official Documentation — docs.ollama.com",
+      "difficulty": "beginner",
+      "tags": ["ollama", "local-llm", "gemma3", "deepseek", "qwen3", "llama", "docker", "spring-ai"],
+      "language": "en",
+      "ingested_at": 1710921790000
+    }
+  }
+]

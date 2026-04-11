@@ -1,0 +1,34 @@
+# ==============================================================================
+# Docker Compose for Test Environment
+# ==============================================================================
+# 
+# Execution from CLI:
+# 1. Start the test database: docker compose -f docker-compose-test.yml up -d
+# 2. Run integration tests: mvn test (Spring detects @ActiveProfiles)
+# ==============================================================================
+
+services:
+  ai-db-test:
+    # Using specialized image with pgvector extension pre-installed
+    image: pgvector/pgvector:pg16
+    container_name: ai-db-test
+    ports:
+      # Mapping host port 5555 to container port 5432
+      - "5555:5432"
+    environment:
+      - POSTGRES_DB=ai-db-test
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=pass
+    
+    healthcheck:
+      # Ensures the database is ready to accept connections before tests start
+      test: ["CMD-SHELL", "pg_isready -U user -d ai-db-test"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - ai-test-network
+
+networks:
+  ai-test-network:
+    driver: bridge
