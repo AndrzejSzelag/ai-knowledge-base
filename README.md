@@ -10,7 +10,10 @@
 
 # AI Knowledge Base ![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)
 
-**AI Knowledge Base** is a modern **RAG** (Retrieval-Augmented Generation) platform that allows you to create a private knowledge base powered by your own documents. The application combines the capabilities of **Spring AI** with local LLM (Large Language Models) **Llama 3.2:3B** via **Ollama**, eliminating the need to send data to external providers-no OpenAI API key required!
+**AI Knowledge Base** is a modern **RAG** (Retrieval-Augmented Generation) platform that enables you to build a private knowledge base powered by your own documents.
+
+The application combines the capabilities of **Spring AI** with a local **LLM** (**Llama 3.2:3B** via **Ollama**), eliminating the need to send data to external providers - no OpenAI API key required.
+
 
 ## Screenshots
 
